@@ -2,22 +2,33 @@
 
 namespace App\Services;
 
+use App\Abstraction\ModelSaverInterface;
 use App\Models\Currency;
+use JetBrains\PhpStorm\Pure;
 
-class CurrencyService
+/**
+ * @method Currency createModel()
+ */
+class CurrencyService extends AbstractService
 {
+    #[Pure]
+    public function __construct(ModelSaverInterface $modelSaver, Currency $model)
+    {
+        parent::__construct($modelSaver, $model);
+    }
+
     public function create(string $name, string $currencyCode, int $exchangeRate): Currency
     {
-        $currency = Currency::where('currencyCode', $currencyCode)->get()->first();
+        $currency = $this->model->newQuery()->where('currencyCode', $currencyCode)->get()->first();
         if (null === $currency) {
-            $currency = new Currency();
+            $currency = $this->createModel();
             $currency->name = $name;
             $currency->currencyCode = $currencyCode;
             $currency->exchangeRate = $exchangeRate;
         } else {
             $this->update($currency, $exchangeRate);
         }
-        $currency->save();
+        $this->save($currency);
 
         return $currency;
     }
@@ -25,6 +36,6 @@ class CurrencyService
     public function update(Currency $currency, int $exchangeRate): void
     {
         $currency->exchangeRate = $exchangeRate;
-        $currency->save();
+        $this->save($currency);
     }
 }
