@@ -14,7 +14,7 @@ abstract class AbstractServiceTest extends TestCase
     protected function getParams(): ModelSaverInterface|MockObject
     {
         $modelSaver = $this->createMock(ModelSaverInterface::class);
-        $this->model = $this->mockModel();
+        $this->model = $this->createModel();
         $callback = function (string $class): Model {
             return $this->createModel();
         };

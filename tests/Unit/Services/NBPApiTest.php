@@ -59,13 +59,23 @@ class NBPApiTest extends TestCase
             ->method('successful')
             ->willReturn(true)
         ;
-        $response->expects($this->once())
-            ->method('json')
-            ->with('rates')
-            ->willReturn([0 => ['mid' => 4.75]])
+        $callback = function ($key = null, $default = null) {
+            if (!in_array($key, ['currency', 'rates'])) {
+                return $default;
+            }
+            if ('currency' === $key) {
+                return 'euro';
+            } else {
+                return [0 => ['mid' => 4.75]];
+            }
+        };
+        [, $method] = [Response::class, 'json'];
+        $response->expects($this->exactly(2))
+            ->method($method)
+            ->willReturnCallback($callback)
         ;
 
-        $exchangeRate = $this->service->getExchangeRate($currencyCode);
+        [,$exchangeRate] = $this->service->getExchangeRate($currencyCode);
         $this->assertEquals(475, $exchangeRate);
     }
 
