@@ -16,7 +16,7 @@ class NBPApi
     /**
      * @throws NBPApiException
      */
-    public function getExchangeRate(string $currencyCode): float
+    public function getExchangeRate(string $currencyCode): array
     {
         $url = sprintf(self::URL, $currencyCode);
         $response = $this->http->get($url, [
@@ -25,9 +25,11 @@ class NBPApi
         if (!$response->successful()) {
             throw new NBPApiException($response->reason());
         }
+        $name = $response->json('currency');
         $rates = $response->json('rates');
         $rate = $rates[0];
+        $exchangeRate = round($rate['mid']*100);
 
-        return round($rate['mid']*100);
+        return [$name, $exchangeRate];
     }
 }
