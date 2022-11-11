@@ -6,7 +6,6 @@ use App\Exceptions\NBPApiException;
 use App\Services\CurrencyService;
 use App\Services\NBPApi;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Queue\Events\JobExceptionOccurred;
 
 class CurrencyController extends Controller
 {
