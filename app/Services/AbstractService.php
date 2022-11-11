@@ -7,21 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractService
 {
-    protected Model $model;
-
     public function __construct(
         protected ModelSaverInterface $modelSaver,
-        $model = null,
+        protected Model $model,
     ) {
-        $this->model = $model;
     }
 
-    protected function save(Model $model)
+    protected function save(Model $model): void
     {
         $this->modelSaver->save($model);
     }
 
-    protected function remove(Model $model)
+    protected function remove(Model $model): void
     {
         $this->modelSaver->remove($model);
     }
