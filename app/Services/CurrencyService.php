@@ -4,14 +4,15 @@ namespace App\Services;
 
 use App\Abstraction\ModelSaverInterface;
 use App\Models\Currency;
-use JetBrains\PhpStorm\Pure;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method Currency createModel()
  */
 class CurrencyService extends AbstractService
 {
-    #[Pure]
+    protected Model|Currency $model;
+
     public function __construct(ModelSaverInterface $modelSaver, Currency $model)
     {
         parent::__construct($modelSaver, $model);
