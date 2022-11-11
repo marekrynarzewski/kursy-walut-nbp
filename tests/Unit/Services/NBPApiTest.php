@@ -74,7 +74,6 @@ class NBPApiTest extends TestCase
             ->method($method)
             ->willReturnCallback($callback)
         ;
-
         [,$exchangeRate] = $this->service->getExchangeRate($currencyCode);
         $this->assertEquals(475, $exchangeRate);
     }
