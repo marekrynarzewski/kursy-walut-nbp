@@ -73,7 +73,7 @@ make init
 make install
 ```
 
-Domyslnie `make install` uruchamia lokalny profil `standalone`, czyli aplikacje razem z kontenerem MySQL.
+Domyslnie `make install` uruchamia lokalny profil `standalone`, czyli aplikacje razem z kontenerem MySQL oraz lokalnym `nginx`.
 
 3. Wygeneruj klucz aplikacji:
 
@@ -104,6 +104,28 @@ Najwazniejsze adresy po starcie:
 - `http://localhost/` - landing page z testerem endpointu
 - `http://localhost/api/documentation` - Swagger UI / OpenAPI
 - `http://localhost/api/currency/EUR` - przykladowe wywolanie API
+
+## Tryb portfolio
+
+Projekt ma tez osobne compose override do uruchamiania wewnatrz glownego portfolio:
+
+- `docker-compose-portfolio.yaml` - podpina aplikacje do `portfolio_edge` i `portfolio_app`,
+- `docker-compose-standalone.yaml` - publikuje lokalne porty dla niezaleznego uruchomienia.
+
+Szybki start w portfolio:
+
+```bash
+docker network inspect portfolio_edge >/dev/null 2>&1 || docker network create portfolio_edge
+docker network inspect portfolio_app >/dev/null 2>&1 || docker network create portfolio_app
+docker compose -f docker-compose.yml -f docker-compose-portfolio.yaml up --build -d
+docker compose -p portfolio -f ../../../docker-compose.yaml up -d caddy
+docker compose -f docker-compose.yml -f docker-compose-portfolio.yaml exec -T app composer install
+docker compose -f docker-compose.yml -f docker-compose-portfolio.yaml exec -T app php artisan migrate
+```
+
+W tym wariancie aplikacja korzysta ze wspolnego `mysql` z glownego portfolio i jest wystawiana przez Caddy pod hostem:
+
+- `http://kursy-walut-nbp.local.test`
 
 Port aplikacji i bazy mozna zmienic w pliku `.env`, korzystajac z:
 

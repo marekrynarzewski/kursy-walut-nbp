@@ -1,5 +1,10 @@
-COMPOSE_PROFILE ?= standalone
-DOCKER_COMPOSE ?= docker compose --profile $(COMPOSE_PROFILE)
+COMPOSE_MODE ?= standalone
+
+ifeq ($(COMPOSE_MODE),portfolio)
+DOCKER_COMPOSE ?= docker compose -f docker-compose.yml -f docker-compose-portfolio.yaml
+else
+DOCKER_COMPOSE ?= docker compose --profile standalone -f docker-compose.yml -f docker-compose-standalone.yaml
+endif
 
 init:
 	cp .env.dist .env
@@ -13,4 +18,3 @@ install:
 
 docs:
 	$(DOCKER_COMPOSE) run --rm --no-deps app php artisan l5-swagger:generate
-

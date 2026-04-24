@@ -1,0 +1,8 @@
+services:
+  nginx:
+    ports:
+      - '${FORWARD_APP_PORT:-80}:80'
+
+  mysql:
+    ports:
+      - '${FORWARD_DB_PORT:-3307}:3306'
