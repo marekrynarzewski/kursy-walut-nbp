@@ -60,17 +60,23 @@ class NBPApiTest extends TestCase
             ->willReturn(true)
         ;
         $callback = function ($key = null, $default = null) {
-            if (!in_array($key, ['currency', 'rates'])) {
+            if (!in_array($key, ['currency', 'rates', 'code', 'table'])) {
                 return $default;
             }
             if ('currency' === $key) {
                 return 'euro';
-            } else {
-                return [0 => ['mid' => 4.75]];
             }
+            if ('code' === $key) {
+                return 'EUR';
+            }
+            if ('table' === $key) {
+                return 'A';
+            }
+
+            return [0 => ['mid' => 4.75, 'effectiveDate' => '2026-04-24']];
         };
         [, $method] = [Response::class, 'json'];
-        $response->expects($this->exactly(2))
+        $response->expects($this->exactly(4))
             ->method($method)
             ->willReturnCallback($callback)
         ;

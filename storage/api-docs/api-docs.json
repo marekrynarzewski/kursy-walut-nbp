@@ -1,0 +1,166 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Kursy walut NBP API",
+        "description": "API do synchronizacji kursow walut z tabeli A Narodowego Banku Polskiego i zapisu w lokalnej bazie danych.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Biezace srodowisko aplikacji"
+        }
+    ],
+    "paths": {
+        "/api/currency/{code}": {
+            "get": {
+                "tags": [
+                    "Currencies"
+                ],
+                "summary": "Pobierz kurs waluty z API NBP i zapisz go lokalnie",
+                "description": "Endpoint synchronizuje kurs waluty z tabeli A NBP. Jesli rekord juz istnieje, kurs zostanie zaktualizowany.",
+                "operationId": "syncCurrencyRate",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Trzyliterowy kod waluty zgodny z ISO 4217, np. EUR albo USD.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z]{3}$"
+                        },
+                        "example": "EUR"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Waluta zostala zsynchronizowana",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "8f3b7f43-2dc9-4f89-9244-0d89f8ed91f4"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "euro"
+                                                },
+                                                "currencyCode": {
+                                                    "type": "string",
+                                                    "example": "EUR"
+                                                },
+                                                "exchangeRate": {
+                                                    "type": "integer",
+                                                    "example": 427
+                                                },
+                                                "exchangeRateDecimal": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 4.27
+                                                },
+                                                "table": {
+                                                    "type": "string",
+                                                    "example": "A"
+                                                },
+                                                "effectiveDate": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2026-04-24"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "created"
+                                                },
+                                                "source": {
+                                                    "type": "string",
+                                                    "example": "NBP API"
+                                                },
+                                                "documentationUrl": {
+                                                    "type": "string",
+                                                    "example": "/api/documentation"
+                                                },
+                                                "timeline": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Fetch exchange rate from NBP"
+                                                            },
+                                                            "detail": {
+                                                                "type": "string",
+                                                                "example": "Tabela A, data 2026-04-24"
+                                                            },
+                                                            "state": {
+                                                                "type": "string",
+                                                                "example": "success"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Waluta nie zostala znaleziona w API NBP",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "NBP_NOT_FOUND"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Currency code XYZ was not found in NBP API."
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "documentationUrl": {
+                                                    "type": "string",
+                                                    "example": "/api/documentation"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Currencies",
+            "description": "Operacje synchronizacji kursow walut z NBP"
+        }
+    ]
+}

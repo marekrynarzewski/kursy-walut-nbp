@@ -10,3 +10,7 @@ install:
 	$(DOCKER_COMPOSE) up -d
 	$(DOCKER_COMPOSE) run --rm --no-deps app php artisan key:generate
 	$(DOCKER_COMPOSE) run --rm --no-deps app php artisan migrate
+
+docs:
+	$(DOCKER_COMPOSE) run --rm --no-deps app php artisan l5-swagger:generate
+

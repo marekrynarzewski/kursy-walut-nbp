@@ -13,12 +13,20 @@ Projekt udostepnia pojedynczy endpoint HTTP, ktory:
 
 Aplikacja korzysta z tabeli A API NBP (`/api/exchangerates/rates/A/{code}`), czyli standardowych srednich kursow walut wzgledem PLN.
 
+Projekt zawiera takze landing page z interaktywnym runnerem oraz dokumentacje OpenAPI dostepna pod `/api/documentation`.
+
 ## Jak to dziala
 
 Wywolanie:
 
 ```text
 GET /currency/{code}
+```
+
+Wersja API do integracji i dokumentacji:
+
+```text
+GET /api/currency/{code}
 ```
 
 Przyklad:
@@ -79,11 +87,23 @@ docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
 ```
 
+5. Wygeneruj dokumentacje OpenAPI:
+
+```bash
+make docs
+```
+
 Po starcie aplikacja bedzie dostepna domyslnie pod adresem:
 
 ```text
 http://localhost
 ```
+
+Najwazniejsze adresy po starcie:
+
+- `http://localhost/` - landing page z testerem endpointu
+- `http://localhost/api/documentation` - Swagger UI / OpenAPI
+- `http://localhost/api/currency/EUR` - przykladowe wywolanie API
 
 Port aplikacji i bazy mozna zmienic w pliku `.env`, korzystajac z:
 
