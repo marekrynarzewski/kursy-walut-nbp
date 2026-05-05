@@ -12,6 +12,7 @@ services:
       - sail
 
   app:
+    restart: unless-stopped
     build:
       context: ./docker/php/8.2
       dockerfile: Dockerfile
@@ -32,6 +33,7 @@ services:
     container_name: 'kursy-walut-nbp-app'
 
   mysql:
+    restart: unless-stopped
     image: 'mysql/mysql-server:8.0'
     environment:
       MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-}'
