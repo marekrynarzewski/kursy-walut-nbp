@@ -33,7 +33,9 @@ services:
       - sail
     container_name: 'kursy-walut-nbp-app'
 
+  # Tylko standalone — w portfolio aplikacja używa współdzielonej bazy Mikrusa (DB_HOST w .env)
   mysql:
+    profiles: ["standalone"]
     restart: unless-stopped
     image: 'mysql/mysql-server:8.0'
     environment:
